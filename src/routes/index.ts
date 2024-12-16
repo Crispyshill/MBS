@@ -1,5 +1,6 @@
 import { Router } from "express";
-import exampleController from "../controllers/exampleController";
+import exampleController from "../controllers/challengeController";
+
 
 const router = Router();
 
