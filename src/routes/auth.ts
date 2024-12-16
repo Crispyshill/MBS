@@ -52,7 +52,7 @@ router.post(
       }
 
       const result = await db.query(
-        "SELECT id, password_hash FROM public.users WHERE email = $1",
+        "SELECT id, externalId, password_hash FROM public.users WHERE email = $1",
         [email]
       );
 
@@ -70,7 +70,8 @@ router.post(
       }
 
       const token = generateToken(user.id);
-      res.json({ token });
+      console.log(user)
+      res.json({externalId: user.externalid, token });
     } catch (err) {
       next(err); // Pass unhandled errors to the global error handler
     }

@@ -20,7 +20,7 @@ router.get(
 
       // Fetch challenges for the specified user
       const result = await db.query(
-        "SELECT * FROM usersChallenges WHERE userId = $1;",
+        "SELECT * FROM usersChallenges WHERE userId = (SELECT Id FROM users WHERE externalId = $1);",
         [userId] // Use parameterized query to avoid SQL injection
       );
 
