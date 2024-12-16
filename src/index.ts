@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import authRoutes from "./routes/auth";
 import challengeRoutes from "./routes/challenge"
+import userRoutes from "./routes/user"
 import * as dotenv from "dotenv";
 const cors = require("cors");
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(express.json());
 // Mount the auth routes
 app.use("/auth", authRoutes);
 app.use("/challenge", challengeRoutes);
+app.use("/user", userRoutes);
 
 // Error Handling Middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
