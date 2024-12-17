@@ -1,6 +1,6 @@
 export interface UsersChallenge {
-    id: string; // Unique identifier for the challenge
-    userId: string;
-    isCompleted: boolean; // If the user completed the challenge
-    completedDate: string;
+    challengeid: string; // Unique identifier for the challenge
+    userid: string;
+    iscompleted: boolean; // If the user completed the challenge
+    completeddate: string;
 }

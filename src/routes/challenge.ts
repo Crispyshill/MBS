@@ -26,7 +26,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const challengeId: string = req.params.challengeId; // Get the userId from the URL parameter
-
+      console.log("Getting for challengeId = " + challengeId);
       const result = await db.query("SELECT * FROM challenges WHERE id = $1;", [challengeId]);
       const challenges: Challenge[] = result.rows; // Properly assign the rows to a typed variable
       res.json(challenges); // Return the challenges array as the response
