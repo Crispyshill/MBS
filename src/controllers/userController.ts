@@ -1,22 +1,11 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+import { UsersChallenge } from "../models/usersChallengeModel";
 import db from "../utils/db";
-import * as dotenv from "dotenv";
-import { UsersChallenge } from "../models/usersChallengeModel"; // Ensure this matches your UsersChallenge model
-dotenv.config();
 
-const router = Router();
-
-// Get all challenges for a specific user
-router.get(
-  "/:userId/challenge",
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUsersChallenges = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = req.params.userId; // Get the userId from the URL parameter
 
-      if (!userId) {
-        res.status(400).json({ error: "User ID is required" });
-        return;
-      }
 
       // Fetch challenges for the specified user
       const result = await db.query(
@@ -31,6 +20,3 @@ router.get(
       next(err); // Pass the error to the global error handler
     }
   }
-);
-
-export default router;

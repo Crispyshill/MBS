@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
-import authRoutes from "./routes/auth";
-import challengeRoutes from "./routes/challenge"
-import userRoutes from "./routes/user"
+import authRoutes from "./routes/authRoutes";
+import challengeRoutes from "./routes/challengeRoutes"
+import userRoutes from "./routes/userRoutes"
 import * as dotenv from "dotenv";
 const cors = require("cors");
 dotenv.config();
