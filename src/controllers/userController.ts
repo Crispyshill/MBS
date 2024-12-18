@@ -1,22 +1,61 @@
 import { NextFunction, Request, Response } from "express";
-import { UsersChallenge } from "../models/usersChallengeModel";
-import db from "../utils/db";
-
-export const getUsersChallenges = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const userId = req.params.userId; // Get the userId from the URL parameter
+import {createNewUser, getAllUsers as getAllUsersFromService, getOneUser as getOneUserFromService, updateUser as updateUserFromService, deleteUser as deleteUserFromService} from "../services/userService";
+import { returnResult } from "../utils/controllerUtils";
+import { User } from "../models/userModel";
 
 
-      // Fetch challenges for the specified user
-      const result = await db.query(
-        "SELECT * FROM usersChallenges WHERE userId = (SELECT Id FROM users WHERE externalId = $1);",
-        [userId] // Use parameterized query to avoid SQL injection
-      );
-
-      const challenges: UsersChallenge[] = result.rows; // Properly type the result
-      res.json(challenges); // Return the challenges as JSON
-    } catch (err) {
-      console.error("Error fetching user's challenges:", err);
-      next(err); // Pass the error to the global error handler
-    }
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try{
+    const users: User[] = await getAllUsersFromService();
+    returnResult(res, 200, users);
   }
+  catch (error) {
+    throw error;
+  }
+}
+
+export const getOneUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try{
+    const userId = req.params.userId;
+    const user: User = await getOneUserFromService(userId);
+    returnResult(res, 200, user);
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
+export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try{
+    const user: User = req.body;
+    updateUserFromService(user);
+    returnResult(res, 204, {});
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
+export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try{
+    const userId = req.params.userId;
+    deleteUserFromService(userId);
+    returnResult(res, 204, {});
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
+
+export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try{
+    const email = req.body.email;
+    const password = req.body.password;
+    createNewUser(email, password);
+    returnResult(res, 301, {});
+  }
+  catch (error) {
+    throw error;
+  }
+}

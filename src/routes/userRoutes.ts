@@ -1,13 +1,34 @@
 import { Router} from "express";
 import * as dotenv from "dotenv";
 import { errorHandler } from "../middleware/errorHandlerMiddleware";
+import usersChallengeRoutes from "./usersChallengeRoutes";
+import { getAllUsers, getOneUser, createUser, updateUser, deleteUser } from "../controllers/userController";
 dotenv.config();
 
 const router = Router();
 
-// Get all challenges for a specific user
-router.get(
-  "/:userId/challenge" 
+router.use("/:userId/challenge", 
+    usersChallengeRoutes
+);
+
+router.get("/", 
+    getAllUsers
+);
+
+router.get("/:userId", 
+    getOneUser
+);
+
+router.post("/", 
+    createUser
+);
+
+router.put("/", 
+    updateUser
+);
+
+router.delete("/:userId", 
+    deleteUser
 );
 
 router.use(errorHandler); // Error handler middleware must be at the end

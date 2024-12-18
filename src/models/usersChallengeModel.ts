@@ -1,6 +1,10 @@
+import { Challenge } from "./challengeModel";
+
 export interface UsersChallenge {
-    challengeid: string; // Unique identifier for the challenge
+    externalid: string;
     userid: string;
+    challengeid: string;
     iscompleted: boolean; // If the user completed the challenge
     completeddate: string;
+    challenge: Challenge;
 }
