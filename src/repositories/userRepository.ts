@@ -85,24 +85,20 @@ export const findUserById = async (userId: string): Promise<User> => {
 }
 
 
-export const updateUser = async (user: User): Promise<void> => {
+export const updateUser = async (user: User): Promise<boolean> => {
   try{
     const result = await db.query("UPDATE users SET externalid = $1, email = $2, created_at = $3, firstname = $4, lastname = $5 WHERE email = $6", [user.externalid, user.email, user.created_at, user.firstname, user.lastname, user.email] );
-    if(null == result.rowCount || result.rowCount < 1){
-      throw throwDBErrors({"code": "00001"}, "User");
-    }    
+    return result.rowCount !== null && result.rowCount > 0;
   } catch(error) {
     console.log("Error updating user");
     throw throwDBErrors(error, "User");
   }
 }
 
-export const deleteUser = async (userId: string): Promise<void> => {
+export const deleteUser = async (userId: string): Promise<boolean> => {
   try{
     const result = await db.query("DELETE FROM users WHERE externalid = $1", [userId]);
-    if(null == result.rowCount || result.rowCount < 1){
-      throw throwDBErrors({"code": "00001"}, "User");
-    }    
+    return result.rowCount !== null && result.rowCount > 0;
   } catch (error) {
     console.log("Error deleting user");
     throw throwDBErrors(error, "User");

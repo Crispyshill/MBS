@@ -93,20 +93,20 @@ describe("User Repository", () => {
   });
 
   describe("deleteUser", () => {
-    it("should delete a user for a valid external ID", async () => {
+    it("should delete a user for a valid external ID, and return true", async () => {
       const mockResult = { rowCount: 1 };
       (db.query as jest.Mock).mockResolvedValueOnce(mockResult);
 
-      await expect(deleteUser("ext-123")).resolves.not.toThrow();
+      await expect(deleteUser("ext-123")).resolves.toBe(true);
 
       expect(db.query).toHaveBeenCalledWith("DELETE FROM users WHERE externalid = $1", ["ext-123"]);
     });
 
-    it("should throw an error if the user does not exist", async () => {
+    it("should return false if no user was deleted", async () => {
       const mockResult = { rowCount: 0 };
       (db.query as jest.Mock).mockResolvedValueOnce(mockResult);
 
-      await expect(deleteUser("unknown-id")).rejects.toThrow("No such User");
+      await expect(deleteUser("unknown-id")).resolves.toBe(false);
     });
   });
 
@@ -122,11 +122,11 @@ describe("User Repository", () => {
         created_at: "2024-01-01T12:00:00Z", // ISO 8601 formatted timestamp
         firstname: "John", // Dummy first name
         lastname: "Doe", // Dummy last name
-      })).resolves.not.toThrow();
+      })).resolves.toBe(true);
 
     });
 
-    it("Should throw an error if the user does not exist in the database based on the externalId", async () => {
+    it("Should return false if no user was updated", async () => {
       const mockResult = { rowCount: 0};
       (db.query as jest.Mock).mockResolvedValueOnce(mockResult);
 
@@ -136,7 +136,7 @@ describe("User Repository", () => {
         created_at: "2024-01-01T12:00:00Z", // ISO 8601 formatted timestamp
         firstname: "John", // Dummy first name
         lastname: "Doe", // Dummy last name
-      })).rejects.toThrow("No such User");
+      })).resolves.toBe(false);
     });
   });
 

@@ -5,10 +5,13 @@ import { throwDBErrors } from "../utils/repositoryUtils";
 export const getChallenges = async (): Promise<Challenge[]> => {
     try{
     const result = await db.query("SELECT externalId, name, description, points, startdate, enddate FROM challenges;");
+    if(null == result.rowCount || result.rowCount < 1){
+        throw throwDBErrors({"code": "00002"}, "Challenge");
+    }
     const challenges: Challenge[] = result.rows;
     return challenges;
     } catch(error) {
-        throw throwDBErrors(error);
+        throw throwDBErrors(error, "Challenge");
     }
 }
 
@@ -16,14 +19,17 @@ export const getChallenges = async (): Promise<Challenge[]> => {
 export const getOneChallenge = async(challengeId: string): Promise<Challenge> => {
     try{
     const result = await db.query("SELECT externalId, name, description, points, startdate, enddate FROM challenges WHERE externalId = $1;", [challengeId]);
+    if(null == result.rowCount || result.rowCount < 1){
+        throw throwDBErrors({"code": "00001"}, "Challenge");
+    }
     const challenge: Challenge = result.rows[0];
     return challenge
     } catch(err) {
-        throw throwDBErrors(err);
+        throw throwDBErrors(err, "Challenge");
     }
 }
 
-export const addOneChallenge = async(challenge: Challenge): Promise<void> => {
+export const addOneChallenge = async(challenge: Challenge): Promise<Boolean> => {
     try {
         // Execute the database query
         const result = await db.query(
@@ -31,29 +37,30 @@ export const addOneChallenge = async(challenge: Challenge): Promise<void> => {
            VALUES ($1, $2, $3, $4, $5)`,
           [challenge.name, challenge.description, challenge.points, challenge.startdate, challenge.enddate]
         );
-    
-        // Optional: Log success if needed
-        console.log(`Challenge "${challenge.name}" added successfully.`);
+        return result.rowCount != null && result.rowCount > 0
+
       } catch (error: any) {
-        // Handle specific errors
-        throw throwDBErrors(error);
+        throw throwDBErrors(error, "Challenge");
       }
 }
 
-export const updateChallenge = async(challenge: Challenge): Promise<void> => {
+export const updateChallenge = async(challenge: Challenge): Promise<Boolean> => {
     try{
     const result = await db.query("UPDATE challenges SET name = $1, description = $2, points = $3, startdate = $4, enddadte = $5", [challenge.name, challenge.description, challenge.points, challenge.startdate, challenge.enddate]);
+    return result.rowCount != null && result.rowCount > 0
     }
     catch(error) {
-        throw throwDBErrors(error);
+        throw throwDBErrors(error, "Challenge");
     }
 }
 
-export const deleteChallenge = async(challengeId: string): Promise<void> => {
+export const deleteChallenge = async(challengeId: string): Promise<Boolean> => {
     try{
     const result = await db.query("DELETE FROM challenges WHERE externalId = $1", [challengeId]);
+    return result.rowCount != null && result.rowCount > 0
+
     } catch(error) {
-        throw throwDBErrors(error);
+        throw throwDBErrors(error, "Challenge");
     }
 }
 

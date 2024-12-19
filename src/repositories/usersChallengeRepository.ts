@@ -12,7 +12,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
       const challenges: UsersChallenge[] = result.rows;
       return challenges;
     } catch(error) {
-      throw throwDBErrors(error); // Rethrow the error for handling upstream
+      throw throwDBErrors(error, "UsersChallenge"); // Rethrow the error for handling upstream
     }
     }
 
@@ -25,7 +25,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
         return result.rowCount !== null && result.rowCount > 0;
       } catch (error) {
         console.error("Error updating users challenge:", error);
-        throw throwDBErrors(error); // Rethrow the error for handling upstream
+        throw throwDBErrors(error, "UsersChallenge"); // Rethrow the error for handling upstream
       }
         
       }
@@ -36,35 +36,32 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
           const result = await db.query("SELECT * FROM userschallenges WHERE externalid = $1", [usersChallengeId]);
       
           if(result.rowCount == null || result.rowCount == 0){
-            throw new Error("No usersChallenge with given id");
+            throw throwDBErrors({code: "00001"}, "UsersChallenge")
           }
           return result.rows[0];
         } catch (err){
           console.log("Error getting one user challenge");
-          throw throwDBErrors(err); // Rethrow the error for handling upstream
+          throw throwDBErrors(err, "UsersChallenge"); // Rethrow the error for handling upstream
         }
       
       }
 
 
-      export const deleteUsersChallenge = async (usersChallengeId: string): Promise<void> => {
+      export const deleteUsersChallenge = async (usersChallengeId: string): Promise<Boolean> => {
         try{
           const result = await db.query("DELETE FROM userschallenges WHERE externalid = $1", [usersChallengeId]);
-          if(result.rowCount == null || result.rowCount == 0){
-            throw new Error("No usersChallenge with given id");
-          }
+          return result.rowCount !== null && result.rowCount > 0;
         } catch (error) {
-          console.error("Error deleting users challenge");
-          throw throwDBErrors(error);
+          throw throwDBErrors(error, "UsersChallenge");
         }
       }
     
 
-      export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<void> => {
+      export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<Boolean> => {
         try{
           const result = await db.query("INSERT INTO userschallenges (iscompleted, completeddate, userid, challengeid) VALUES ($1, $2, SELECT(id FROM users WHERE externalid = $3), SELECT(id FROM challenges WHERE externalid = $4))", [usersChallenge.iscompleted, usersChallenge.completeddate, usersChallenge.userid, usersChallenge.challengeid]);
+          return result.rowCount !== null && result.rowCount > 0;
         } catch (error) {
-          console.error("Error creating users challenge");
-          throw throwDBErrors(error);
+          throw throwDBErrors(error, "UsersChallenge");
         }
       }
