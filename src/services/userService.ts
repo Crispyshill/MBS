@@ -11,16 +11,10 @@ export const createNewUser = async (email: string, password: string): Promise<{ 
   return user;
 };
 
-export const checkUserCredentials = async (email: string, password: string): Promise<void> => {
+export const checkUserCredentials = async (email: string, password: string): Promise<boolean> => {
       const passwordHash = (await getUserPasswordHashFromEmail(email)).password_hash;
-        ensureResourceExists(passwordHash, "Invalid email or password")
-        const isMatch = await comparePassword(password, passwordHash);
-
-      if (!isMatch) {
-        const error = new Error("Invalid email or password");
-      (error as any).status = 403;
-      throw error;
-      }
+      const isMatch = await comparePassword(password, passwordHash);
+      return isMatch;
 }
 
 
@@ -52,17 +46,19 @@ export const getOneUserFromEmail = async (email: string): Promise<User> => {
 }
 
 
-export const updateUser = async (user: User): Promise<void> => {
+export const updateUser = async (user: User): Promise<boolean> => {
   try{
-    updateUserFromRepo(user);
+    const result = updateUserFromRepo(user);
+    return result;
   } catch (error) {
     throw error;
   }
 }
 
-export const deleteUser = async (userId: string): Promise<void> => {
+export const deleteUser = async (userId: string): Promise<boolean> => {
   try{
-    deleteUserFromRepo(userId);
+    const result = deleteUserFromRepo(userId);
+    return result;
   } catch (error) {
     throw error;
   }

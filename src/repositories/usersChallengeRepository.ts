@@ -8,7 +8,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
         "SELECT * FROM usersChallenges WHERE userId = $1;",
         [userId] // Use parameterized query to avoid SQL injection
       );
-    
+     
       const challenges: UsersChallenge[] = result.rows;
       return challenges;
     } catch(error) {
@@ -17,7 +17,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
     }
 
 
-    export const updateUsersChallenge = async (usersChallenge: UsersChallenge): Promise<Boolean> => {
+    export const updateUsersChallenge = async (usersChallenge: UsersChallenge): Promise<boolean> => {
         try{
         const result = await db.query(
           "UPDATE userschallenges SET iscompleted = $1, completedate = $2 WHERE id = $3", [usersChallenge.iscompleted, usersChallenge.completeddate, usersChallenge.externalid]
@@ -47,7 +47,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
       }
 
 
-      export const deleteUsersChallenge = async (usersChallengeId: string): Promise<Boolean> => {
+      export const deleteUsersChallenge = async (usersChallengeId: string): Promise<boolean> => {
         try{
           const result = await db.query("DELETE FROM userschallenges WHERE externalid = $1", [usersChallengeId]);
           return result.rowCount !== null && result.rowCount > 0;
@@ -57,7 +57,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
       }
     
 
-      export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<Boolean> => {
+      export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<boolean> => {
         try{
           const result = await db.query("INSERT INTO userschallenges (iscompleted, completeddate, userid, challengeid) VALUES ($1, $2, SELECT(id FROM users WHERE externalid = $3), SELECT(id FROM challenges WHERE externalid = $4))", [usersChallenge.iscompleted, usersChallenge.completeddate, usersChallenge.userid, usersChallenge.challengeid]);
           return result.rowCount !== null && result.rowCount > 0;

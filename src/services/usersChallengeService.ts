@@ -24,9 +24,10 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
     }
   
   
-  export const updateUsersChallenge = async (usersChallenge: UsersChallenge): Promise<void> => {
+  export const updateUsersChallenge = async (usersChallenge: UsersChallenge): Promise<boolean> => {
     try{
-      const result = await updateUsersChallengeFromRepo(usersChallenge);
+      const result: boolean = await updateUsersChallengeFromRepo(usersChallenge);
+      return result;
     } catch(error) {
       console.error("Error updating users challenge");
       throw error;
@@ -34,18 +35,20 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
     }
 
 
-    export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<void> => {
+    export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<boolean> => {
       try{
-        const result = await createUsersChallengeFromRepo(usersChallenge);
+        const result: boolean = await createUsersChallengeFromRepo(usersChallenge);
+        return result;
       } catch(error) {
         console.error("Error creating users challenge");
         throw error;
       }
       }
 
-      export const deleteUsersChallenge = async (usersChallengeId: string): Promise<void> => {
+      export const deleteUsersChallenge = async (usersChallengeId: string): Promise<boolean> => {
         try{
-          const result = await deleteUsersChallengeFromRepo(usersChallengeId);
+          const result: boolean = await deleteUsersChallengeFromRepo(usersChallengeId);
+          return result;
         } catch(error) {
           console.error("Error deleting users challenge");
           throw error;

@@ -10,7 +10,7 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
     returnResult(res, 200, users);
   }
   catch (error) {
-    throw error;
+    next(error);
   }
 }
 
@@ -21,7 +21,7 @@ export const getOneUser = async (req: Request, res: Response, next: NextFunction
     returnResult(res, 200, user);
   }
   catch (error) {
-    throw error;
+    next(error);
   }
 }
 
@@ -32,7 +32,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     returnResult(res, 204, {});
   }
   catch (error) {
-    throw error;
+    next(error);
   }
 }
 
@@ -43,7 +43,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     returnResult(res, 204, {});
   }
   catch (error) {
-    throw error;
+    next(error);
   }
 }
 
@@ -56,6 +56,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     returnResult(res, 301, {});
   }
   catch (error) {
-    throw error;
+    next(error);
   }
 }

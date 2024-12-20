@@ -7,9 +7,7 @@ export const getChallenges = async(): Promise<Challenge[]> => {
     const challenges = getChallengesFromRepository();
     return challenges;
     } catch(err) {
-        const error = new Error("error in getChallenges");
-        (error as any).status = 500;
-        throw error;
+        throw err;
     }
 }
 
@@ -22,7 +20,7 @@ export const getOneChallenge = async(challengeId: string): Promise<Challenge> =>
     }
 }
 
-export const addOneChallenge = async(challenge: Challenge): Promise<void> => {
+export const addOneChallenge = async(challenge: Challenge): Promise<Boolean> => {
     try{
         return addOneChallengeFromRepository(challenge);
     } catch(err){
@@ -30,7 +28,7 @@ export const addOneChallenge = async(challenge: Challenge): Promise<void> => {
 }
 }
 
-export const updateChallenge = async(challenge: Challenge): Promise<void> => {
+export const updateChallenge = async(challenge: Challenge): Promise<Boolean> => {
     try{
         return updateChallengeFromRepository(challenge);
     } catch(err){
@@ -38,7 +36,7 @@ export const updateChallenge = async(challenge: Challenge): Promise<void> => {
     }
 }
 
-export const deleteChallenge = async(challengeId: string): Promise<void> => {
+export const deleteChallenge = async(challengeId: string): Promise<Boolean> => {
     try{
         return deleteChallengeFromRepository(challengeId);
     } catch(err){
