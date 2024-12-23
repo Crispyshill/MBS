@@ -61,8 +61,16 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
 
       export const createUsersChallenge = async (usersChallenge: UsersChallenge): Promise<boolean> => {
         try{
-          const result = await db.query("INSERT INTO userschallenges (iscompleted, completeddate, userid, challengeid) VALUES ($1, $2, SELECT(id FROM users WHERE externalid = $3), SELECT(id FROM challenges WHERE externalid = $4))", [usersChallenge.iscompleted, usersChallenge.completeddate, usersChallenge.userid, usersChallenge.challengeid]);
-          return result.rowCount !== null && result.rowCount > 0;
+          const result = await db.query(
+            `INSERT INTO userschallenges (iscompleted, userid, challengeid)
+             VALUES (
+               $1, 
+               (SELECT id FROM users WHERE externalid = $2), 
+               (SELECT id FROM challenges WHERE externalid = $3)
+             )`,
+            [usersChallenge.iscompleted, usersChallenge.userid, usersChallenge.challengeid]
+          );
+                    return result.rowCount !== null && result.rowCount > 0;
         } catch (error) {
           throw throwDBErrors(error, "UsersChallenge");
         }
