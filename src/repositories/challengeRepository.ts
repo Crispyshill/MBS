@@ -1,6 +1,7 @@
 import { Challenge } from "../models/challengeModel";
 import db from "../utils/db";
 import { throwDBErrors } from "../utils/repositoryUtils";
+import { DateTime } from "luxon";
 
 export const getChallenges = async (): Promise<Challenge[]> => {
     try{
@@ -29,20 +30,21 @@ export const getOneChallenge = async(challengeId: string): Promise<Challenge> =>
     }
 }
 
-export const addOneChallenge = async(challenge: Challenge): Promise<Boolean> => {
+export const addOneChallenge = async (challenge: Challenge): Promise<boolean> => {
     try {
-        // Execute the database query
-        const result = await db.query(
-          `INSERT INTO challenges (name, description, points, startdate, enddate) 
-           VALUES ($1, $2, $3, $4, $5)`,
-          [challenge.name, challenge.description, challenge.points, challenge.startdate, challenge.enddate]
-        );
-        return result.rowCount != null && result.rowCount > 0
-
-      } catch (error: any) {
-        throw throwDBErrors(error, "Challenge");
-      }
-}
+      const startDateUTC = DateTime.utc().toISO();
+  
+      const result = await db.query(
+        `INSERT INTO challenges (name, description, points, startdate) 
+         VALUES ($1, $2, $3, $4)`,
+        [challenge.name, challenge.description, challenge.points, startDateUTC]
+      );
+  
+      return result.rowCount != null && result.rowCount > 0;
+    } catch (error: any) {
+      throw throwDBErrors(error, "Challenge");
+    }
+  };
 
 export const updateChallenge = async(challenge: Challenge): Promise<Boolean> => {
     try{
