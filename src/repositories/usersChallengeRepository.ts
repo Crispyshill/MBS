@@ -5,13 +5,15 @@ import db from "../utils/db";
 export const getAllUsersChallenges = async (userId: string): Promise<UsersChallenge[]> => {
     try{
       const result = await db.query(
-        "SELECT * FROM usersChallenges WHERE userId = $1;",
+        "SELECT * FROM usersChallenges WHERE userId = (SELECT id FROM users WHERE externalid = $1);",
         [userId] // Use parameterized query to avoid SQL injection
       );
      
       const challenges: UsersChallenge[] = result.rows;
+      console.log(userId)
       return challenges;
     } catch(error) {
+      console.error(error)
       throw throwDBErrors(error, "UsersChallenge"); // Rethrow the error for handling upstream
     }
     }

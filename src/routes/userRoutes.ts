@@ -7,9 +7,10 @@ dotenv.config();
 
 const router = Router();
 
-router.use("/:userId/challenge", 
-    usersChallengeRoutes
-);
+router.use("/:userId/challenge", (req, res, next) => {
+    req.params.userId = req.params.userId || ""; 
+    next();
+  }, usersChallengeRoutes);
 
 router.get("/", 
     getAllUsers

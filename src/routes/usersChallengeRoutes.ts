@@ -4,7 +4,7 @@ import { errorHandler } from "../middleware/errorHandlerMiddleware";
 import {getAllUsersChallenges, getOneUsersChallenge, createUsersChallenge, updateUsersChallenge, deleteUsersChallenge} from "../controllers/usersChallengeController";
 dotenv.config();
 
-const router = Router();
+const router = Router({mergeParams: true});
 
 // Get all challenges for a specific user
 router.get(
