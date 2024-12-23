@@ -46,7 +46,7 @@ export const addOneChallenge = async(challenge: Challenge): Promise<Boolean> => 
 
 export const updateChallenge = async(challenge: Challenge): Promise<Boolean> => {
     try{
-    const result = await db.query("UPDATE challenges SET name = $1, description = $2, points = $3, startdate = $4, enddadte = $5", [challenge.name, challenge.description, challenge.points, challenge.startdate, challenge.enddate]);
+    const result = await db.query("UPDATE challenges SET name = $1, description = $2, points = $3, startdate = $4, enddate = $5", [challenge.name, challenge.description, challenge.points, challenge.startdate, challenge.enddate]);
     return result.rowCount != null && result.rowCount > 0
     }
     catch(error) {
