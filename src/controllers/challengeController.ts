@@ -6,7 +6,7 @@ import { Challenge } from "../models/challengeModel";
 
 export const getChallenges = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const challenges = getChallengesFromService();
+    const challenges = await getChallengesFromService();
     returnResult(res, {code: 200, body: challenges});
   } catch (err) {
     next(err);
@@ -17,7 +17,7 @@ export const getChallenges = async (req: Request, res: Response, next: NextFunct
 export const getOneChallenge = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try{
     const challengeId: string = req.params.challengeId; // Get the userId from the URL parameter
-    const challenge = getOneChallengeFromService(challengeId);
+    const challenge = await getOneChallengeFromService(challengeId);
     ensureResourceExists(challenge, "No resource with given id", 404);
     returnResult(res, {code: 200, body: challenge});
   } catch (err){
