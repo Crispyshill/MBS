@@ -5,7 +5,7 @@ import db from "../utils/db";
 export const getAllUsersChallenges = async (userId: string): Promise<UsersChallenge[]> => {
     try{
       const result = await db.query(
-        "SELECT * FROM usersChallenges WHERE userId = (SELECT id FROM users WHERE externalid = $1);",
+        "SELECT u.externalid as userid, c.externalid as challengeid, iscompleted, completeddate, uc.externalid FROM usersChallenges uc JOIN users u on u.id = uc.userid JOIN challenges c on uc.challengeid = c.id  WHERE userId = (SELECT id FROM users WHERE externalid = $1);",
         [userId] // Use parameterized query to avoid SQL injection
       );
      
@@ -22,7 +22,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
     export const updateUsersChallenge = async (usersChallenge: UsersChallenge): Promise<boolean> => {
         try{
         const result = await db.query(
-          "UPDATE userschallenges SET iscompleted = $1, completedate = $2 WHERE id = $3", [usersChallenge.iscompleted, usersChallenge.completeddate, usersChallenge.externalid]
+          "UPDATE userschallenges SET iscompleted = $1, completeddate = $2 WHERE externalid = $3", [usersChallenge.iscompleted, usersChallenge.completeddate, usersChallenge.externalid]
         );
         return result.rowCount !== null && result.rowCount > 0;
       } catch (error) {
@@ -35,7 +35,7 @@ export const getAllUsersChallenges = async (userId: string): Promise<UsersChalle
       
       export const getOneUsersChallenge = async (usersChallengeId: string): Promise<UsersChallenge> => {
         try{
-          const result = await db.query("SELECT * FROM userschallenges WHERE externalid = $1", [usersChallengeId]);
+          const result = await db.query("SELECT u.externalid as userid, c.externalid as challengeid, iscompleted, completeddate, uc.externalid FROM usersChallenges uc JOIN users u on u.id = uc.userid JOIN challenges c on uc.challengeid = c.id  WHERE uc.externalid = $1", [usersChallengeId]);
       
           if(result.rowCount == null || result.rowCount == 0){
             throw throwDBErrors({code: "00001"}, "UsersChallenge")
