@@ -48,7 +48,7 @@ export const getOneUserFromEmail = async (email: string): Promise<User> => {
 
 export const updateUser = async (user: User): Promise<boolean> => {
   try{
-    const result = updateUserFromRepo(user);
+    const result = await updateUserFromRepo(user);
     return result;
   } catch (error) {
     throw error;
@@ -57,9 +57,10 @@ export const updateUser = async (user: User): Promise<boolean> => {
 
 export const deleteUser = async (userId: string): Promise<boolean> => {
   try{
-    const result = deleteUserFromRepo(userId);
+    const result = await deleteUserFromRepo(userId);
     return result;
   } catch (error) {
+    console.log("Error in service deleteUser");
     throw error;
   }
 }

@@ -34,6 +34,15 @@ export const errorHandler = (err: CustomError, req: Request, res: Response, next
     errorMessage = "You do not have permission to perform this action.";
   }
 
+  if (err.code === "22P02") {
+    statusCode = 400;
+    errorMessage = "Invalid input syntax for UUID.";
+  } else if (err.status) {
+    statusCode = err.status; // Custom status code
+    errorMessage = err.message;
+  }
+
+
   // Send the response
   res.status(statusCode).json({
     success: false,

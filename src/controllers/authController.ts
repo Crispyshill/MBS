@@ -13,7 +13,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         ensureResourceExists(user, "Failed to create a new user.");
 
         const token = generateToken(user.externalid);
-        returnResult(res, 201, {token, user});
+        returnResult(res, {code: 201, body: {token, user}});
 
 
     } catch (err) {
@@ -30,7 +30,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         const user = await getOneUserFromEmail(email);
 
         const token = generateToken(user.externalid);
-        returnResult(res, 200, {externalId: user.externalid, token });
+        returnResult(res, {code: 200, body: {externalId: user.externalid, token }});
 
     } catch (err) {
       next(err);

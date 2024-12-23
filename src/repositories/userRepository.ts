@@ -71,7 +71,7 @@ export const findUserByEmail = async (email: string): Promise<User> => {
 export const findUserById = async (userId: string): Promise<User> => {
   try{
   const result = await db.query(
-    "SELECT externalid, password_hash FROM users WHERE externalid = $1", 
+    "SELECT externalid, email, created_at, firstname, lastname FROM users WHERE externalid = $1", 
     [userId]
   );
   if(null == result.rowCount || result.rowCount < 1){
@@ -87,7 +87,8 @@ export const findUserById = async (userId: string): Promise<User> => {
 
 export const updateUser = async (user: User): Promise<boolean> => {
   try{
-    const result = await db.query("UPDATE users SET externalid = $1, email = $2, created_at = $3, firstname = $4, lastname = $5 WHERE email = $6", [user.externalid, user.email, user.created_at, user.firstname, user.lastname, user.email] );
+    const result = await db.query("UPDATE users SET email = $1, created_at = $2, firstname = $3, lastname = $4 WHERE externalid = $5", [user.email, user.created_at, user.firstname, user.lastname, user.externalid] );
+    console.log(JSON.stringify(result));
     return result.rowCount !== null && result.rowCount > 0;
   } catch(error) {
     console.log("Error updating user");

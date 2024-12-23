@@ -51,6 +51,11 @@ export const throwDBErrors = (error: any, entityName: string = "Item"): Error =>
       case "22001": // String data too long
         message = `One or more fields for ${entityName} exceeded allowed length.`;
         break;
+
+      case "22P02":
+        message = `Invalid input syntax for UUID while processing ${entityName}.`;
+        console.error("Inside this special case + " + error.code, + error.message)
+        break;
   
       default:
         message = `An unexpected database error occurred while processing ${entityName}.`;
