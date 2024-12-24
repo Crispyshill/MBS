@@ -5,6 +5,7 @@ export interface Challenge {
   points: number; // Points awarded for completing the challenge
   startdate?: string; // Optional: Start date for the challenge (ISO string)
   enddate?: string; // Optional: End date for the challenge (ISO string)
+  category: string;
 }
   
   
